@@ -2,6 +2,8 @@ package hw1;
 
 import java.util.*;
 
+// TODO: Extra credit (Maybe?)
+
 public class Library {
     private static Integer nextId = 1;
     private final Integer id;
@@ -39,13 +41,13 @@ public class Library {
     }
 
     public void checkIn(String type, Integer id) {
-        if (type.equals("book")) {
+        if (type.equalsIgnoreCase("book")) {
             Book book = books.stream()
                     .filter(b -> Objects.equals(b.getId(), id))
                     .findFirst()
                     .orElseThrow(() -> new IndexOutOfBoundsException("Book does not exist"));
             book.removeCurrentOwner();
-        } else if (type.equals("magazine")) {
+        } else if (type.equalsIgnoreCase("magazine")) {
             Magazine magazine = magazines.stream()
                     .filter(b -> Objects.equals(b.getId(), id))
                     .findFirst()
@@ -60,13 +62,13 @@ public class Library {
     }
 
     public void checkOut(String type, Integer id, Person person) {
-        if (type.equals("book")) {
+        if (type.equalsIgnoreCase("book")) {
             Book book = books.stream()
                     .filter(b -> Objects.equals(b.getId(), id))
                     .findFirst()
                     .orElseThrow(() -> new IndexOutOfBoundsException("Book does not exist"));
             book.setCurrentOwner(person);
-        } else if (type.equals("magazine")) {
+        } else if (type.equalsIgnoreCase("magazine")) {
             Magazine magazine = magazines.stream()
                     .filter(b -> Objects.equals(b.getId(), id))
                     .findFirst()
@@ -78,6 +80,66 @@ public class Library {
 
         String output = (type.equals("book") ? "Assigning book" : "Assigning magazine") + " ";
         System.out.println(output + id + " to " + person);
+    }
+
+    public void searchBook(String title) {
+        ArrayList<Book> combined = new ArrayList<>();
+        combined.addAll(books);
+        combined.addAll(magazines);
+        Book book = combined.stream().filter(b -> Objects.equals(b.getTitle().toLowerCase(), title.toLowerCase())).findFirst().orElse(null);
+        if (book != null) {
+            System.out.println("Book Found:");
+            System.out.println(book);
+        } else {
+            System.out.println("Book Not Found");
+        }
+    }
+
+    public void stockBooks(boolean stock) {
+        ArrayList<Book> inStock = new ArrayList<>();
+
+        for (Book book : books) {
+            if ((!stock && book.getCurrentOwner() != null) || (stock && book.getCurrentOwner() == null)) {
+                inStock.add(book);
+            }
+        }
+
+        for (Book book : magazines) {
+            if ((!stock && book.getCurrentOwner() != null) || (stock && book.getCurrentOwner() == null)) {
+                inStock.add(book);
+            }
+        }
+
+        String message = (stock) ? "Books in stock: " : "Books out of stock: ";
+        if (stock) {
+            System.out.println("-------- Books In Stock --------");
+        } else {
+            System.out.println("------ Books Out Of Stock ------");
+        }
+        System.out.println(message + inStock.size());
+        for (Book book : inStock) {
+            System.out.println(book);
+        }
+    }
+
+    public void bookOwner() {
+        ArrayList<Book> combined = new ArrayList<>();
+        ArrayList<Person> owners = new ArrayList<>();
+
+        combined.addAll(books);
+        combined.addAll(magazines);
+
+        for (Book book : combined) {
+            if (book.getCurrentOwner() != null) {
+                owners.add(book.getCurrentOwner());
+            }
+        }
+
+        System.out.println("---------- Book Owner ----------");
+        for (Person owner : owners) {
+            System.out.println(owner);
+        }
+        System.out.println();
     }
 
     public void fillLibrary() {
@@ -103,7 +165,8 @@ public class Library {
     public String toString() {
         StringBuilder description = new StringBuilder(100);
 
-        String library_description = "Library: " + getId() + "\nList of books:\n";
+        String library_description = "Library: " + getId() + "\n";
+        description.append("--------------------------------\n");
         description.append(library_description);
 
         if (!this.books.isEmpty()) {
