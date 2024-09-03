@@ -2,8 +2,7 @@ package hw1;
 
 import java.util.*;
 
-// TODO: Extra credit (Maybe?)
-
+@SuppressWarnings("ALL")
 public class Library {
     private static Integer nextId = 1;
     private final Integer id;
@@ -11,8 +10,9 @@ public class Library {
     private Integer magazine_id = 1;
     public String name;
 
-    public ArrayList<Book> books = new ArrayList<>();
-    public ArrayList<Magazine> magazines = new ArrayList<>();
+    final public ArrayList<Person> owners = new ArrayList<>();
+    final public ArrayList<Book> books = new ArrayList<>();
+    final public ArrayList<Magazine> magazines = new ArrayList<>();
 
     public Library() {
         this.id = nextId++;
@@ -22,19 +22,75 @@ public class Library {
         return id;
     }
 
-    public void addBook(String title, String author, Optional<Person> current_owner) {
+    public Person getOwnerInfo(Integer id) {
+        return owners.stream()
+                .filter(p -> p.id.equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public ArrayList<Person> getOwnerInfo(String name) {
+        ArrayList<Person> found = new ArrayList<>();
+
+        for (Person p : owners) {
+            if (p.getName().equals(name)) {
+                found.add(p);
+            }
+        }
+
+        return found;
+    }
+
+    public void modifyOwner(Integer id, String newName, String phoneNumber) {
+        Person person = getOwnerInfo(id);
+        person.setName(newName);
+        person.setPhoneNumber(phoneNumber);
+        System.out.println("Successfully modified: " + person);
+        System.out.println();
+    }
+
+    public void addOwner(Person person) {
+        owners.add(person);
+        System.out.println("Successfully added: " + person + " with ID: " + person.id);
+        System.out.println();
+    }
+
+    public void ownedBy(Person person) {
+        if (person != null) {
+            for (Book book : books) {
+                if (book.getCurrentOwner() != null && book.getCurrentOwner().equals(person)) {
+                    System.out.println("Book ID: " + book.getId());
+                    System.out.println("Title: " + book.getTitle());
+                }
+            }
+
+            for (Magazine magazine : magazines) {
+                if (magazine.getCurrentOwner() != null && magazine.getCurrentOwner().equals(person)) {
+                    System.out.println("Magazine ID: " + magazine.getId());
+                    System.out.println("Title: " + magazine.getTitle());
+                }
+            }
+            System.out.println();
+        } else {
+            System.out.println("Person not found");
+        }
+    }
+
+    public void addBook(String title, String author, Optional<Person> currentOwner) {
         Book book;
 
-        book = current_owner.map(person -> new Book(title, author, book_id++, person)).orElseGet(() -> new Book(title, author, book_id++));
+        currentOwner.ifPresent(owners::add);
+        book = currentOwner.map(person -> new Book(title, author, book_id++, person)).orElseGet(() -> new Book(title, author, book_id++));
 
         books.add(book);
         System.out.println("Successfully added book " + book.getTitle());
     }
 
-    public void addMagazine(String title, String author, String data_publication, Optional<Person> current_owner) {
+    public void addMagazine(String title, String author, String dataPublication, Optional<Person> currentOwner) {
         Magazine magazine;
 
-        magazine = current_owner.map(person -> new Magazine(title, author, magazine_id++, data_publication, person)).orElseGet(() -> new Magazine(title, author, magazine_id++, data_publication));
+        currentOwner.ifPresent(owners::add);
+        magazine = currentOwner.map(person -> new Magazine(title, author, magazine_id++, dataPublication, person)).orElseGet(() -> new Magazine(title, author, magazine_id++, dataPublication));
 
         magazines.add(magazine);
         System.out.println("Successfully added book " + magazine.getTitle());
@@ -78,7 +134,7 @@ public class Library {
             throw new IllegalArgumentException("Unsupported book type");
         }
 
-        String output = (type.equals("book") ? "Assigning book" : "Assigning magazine") + " ";
+        String output = (type.equalsIgnoreCase("book") ? "Assigning book" : "Assigning magazine") + " ";
         System.out.println(output + id + " to " + person);
     }
 

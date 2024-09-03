@@ -21,13 +21,13 @@ public class Magazine extends Book{
     @Override
     public String toString(){
         if (getCurrentOwner() == null) {
-            return "Magazine: " + getId() +
+            return "Magazine ID: " + getId() +
                     "\nTitle: " + getTitle() +
                     "\nAuthor: " + getAuthor() +
                     "\nPublication Date: " + getPublicationDate() +
                     "\nStatus: Available\n";
         }
-        return "Magazine: " + getId() +
+        return "Magazine ID: " + getId() +
                 "\nTitle: " + getTitle() +
                 "\nAuthor: " + getAuthor() +
                 "\nPublication Date: " + getPublicationDate() +

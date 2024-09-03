@@ -1,14 +1,13 @@
 package hw1;
 
-// TODO: Compile program into a single file
-
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class Main {
-    String message = """
+    final String message = """
             Menu
-            Options:
             1. Description of library
             2. Enter a new item (book, magazine)
             3. Search item
@@ -19,7 +18,17 @@ public class Main {
             8. Print owners
             9. Print Menu
             10. Library Example (Load library with 5 books and 3 magazines)
+            11. Person Center
             0. Exit
+            """;
+
+    final String personMessage = """
+            1. Enter a new person
+            2. Modified info
+            3. Search for a person
+            4. Books owned by a person
+            5. Print menu
+            6. Back to main menu
             """;
 
     public static void main(String[] args) {
@@ -27,13 +36,12 @@ public class Main {
         Library library = new Library();
         Main m = new Main();
 
-        int choice = 0;
         System.out.println(m.message);
         while (true) {
-            choice = m.menu(scanner);
+            int choice = m.menu(scanner);
             switch (choice) {
                 case 1:
-                    System.out.println(library);
+                    System.out.print(library);
                     break;
                 case 2:
                     m.entry(library, scanner);
@@ -61,8 +69,13 @@ public class Main {
                     break;
                 case 10:
                     library.fillLibrary();
+                    System.out.println();
+                    break;
+                case 11:
+                    m.personManager(library, scanner);
                     break;
                 default:
+                    System.out.println("Thanks for using CSCI350 Library!!!");
                     System.exit(0);
             }
         }
@@ -72,17 +85,109 @@ public class Main {
         int choice = -1;
 
         while (choice == -1) {
-            System.out.print("Enter your choice: ");
+            System.out.print("(MAIN) Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
 
-            if (choice < 0 || choice > 10) {
+            if (choice < 0 || choice > 11) {
                 System.out.println("Invalid option");
                 choice = -1;
             }
         }
 
         return choice;
+    }
+
+    public void personManager(Library library, Scanner scanner) {
+        System.out.println(personMessage);
+        while (true) {
+            System.out.print("(MANAGER) Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (choice == 6) {
+                break;
+            }
+
+            if (choice < 1 || choice > 6) {
+                System.out.println("Invalid option");
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    personEntry(library, scanner);
+                    break;
+                case 2:
+                    modifyPerson(library, scanner);
+                    break;
+                case 3:
+                    searchPerson(library, scanner);
+                    break;
+                case 4:
+                    ownedBy(library, scanner);
+                case 5:
+                    System.out.println(personMessage);
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    public void personEntry(Library library, Scanner scanner) {
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter phone number (xxx-xxxx-xxx): ");
+        String phone = scanner.nextLine();
+        Person person = new Person(name, phone);
+
+        library.addOwner(person);
+    }
+
+    public void modifyPerson(Library library, Scanner scanner) {
+        System.out.print("Enter person ID: ");
+        Integer personID = scanner.nextInt();
+        scanner.nextLine();
+        Person person = library.getOwnerInfo(personID);
+
+        if (person != null) {
+            System.out.print("Enter new name: ");
+            String newName = scanner.nextLine();
+            System.out.print("Enter new phone number (xxx-xxxx-xxx): ");
+            String phoneNumber = scanner.nextLine();
+            library.modifyOwner(personID, newName, phoneNumber);
+        } else {
+            System.out.println("Person not found");
+        }
+    }
+
+    public void searchPerson(Library library, Scanner scanner) {
+        System.out.print("Enter person name: ");
+        String name = scanner.nextLine();
+        ArrayList<Person> found = library.getOwnerInfo(name);
+        if (found.isEmpty()) {
+            System.out.println("Person not found");
+        } else {
+            System.out.println("List of people found: ");
+            for (Person person : found) {
+                System.out.println("    " + person.id + " " + person);
+            }
+        }
+        System.out.println();
+    }
+
+    public void ownedBy(Library library, Scanner scanner) {
+        System.out.print("Enter person ID: ");
+        Integer personID = scanner.nextInt();
+        scanner.nextLine();
+        Person person = library.getOwnerInfo(personID);
+
+        if (person != null) {
+            library.ownedBy(person);
+        } else {
+            System.out.println("Person not found");
+        }
     }
 
     public void entry(Library library, Scanner scanner) {
@@ -124,18 +229,18 @@ public class Main {
     public void processRequest(Library library, Scanner scanner, boolean checkIn) {
         System.out.print("Type (Book or Magazine): ");
         String type = scanner.nextLine().toUpperCase();
-        System.out.print("ID: ");
+        System.out.print("Book/Magazine ID: ");
         int id = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Person ID: ");
+        Integer personID = scanner.nextInt();
         scanner.nextLine();
 
         if (checkIn) {
             library.checkIn(type, id);
         } else {
-            System.out.print("Enter name: ");
-            String name = scanner.nextLine();
-            System.out.print("Enter phone number: ");
-            String phone = scanner.nextLine();
-            library.checkOut(type, id, new Person(name, phone));
+            Person person = library.getOwnerInfo(personID);
+            library.checkOut(type, id, person);
         }
     }
 

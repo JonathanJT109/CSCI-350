@@ -1,34 +1,41 @@
 package hw1;
 
+@SuppressWarnings("ALL")
 public class Person {
     private String name;
-    private String phone_number;
+    private static Integer nextId = 1;
+    public Integer id;
+    private String phoneNumber;
 
-    public Person(String phone_number) {
-        String number = process_number(phone_number);
+// --Commented out by Inspection START (9/3/2024 5:57 PM):
+//    public Person(String phoneNumber) {
+//        String number = processNumber(phoneNumber);
+//
+//        if (number.length() != 10) {
+//            throw new IllegalArgumentException("Phone number should be 10 digits long. Ex. xxx-xxx-xxxx");
+//        }
+//
+//        this.phoneNumber = number;
+//        this.id = nextId++;
+//    }
+// --Commented out by Inspection STOP (9/3/2024 5:57 PM)
 
-        if (number.length() != 10) {
-            throw new IllegalArgumentException("Phone number should be 10 digits long. Ex. xxx-xxx-xxxx");
-        }
-
-        this.phone_number = number;
-    }
-
-    public Person(String name, String phone_number) {
-        String number = process_number(phone_number);
+    public Person(String name, String phoneNumber) {
+        String number = processNumber(phoneNumber);
 
         if (number.length() != 10) {
             throw new IllegalArgumentException("Phone number should be 10 digits long. Ex. xxx-xxx-xxxx");
         }
 
         this.name = name;
-        this.phone_number = number;
+        this.phoneNumber = number;
+        this.id = nextId++;
     }
 
-    public String process_number(String phone_number){
+    public String processNumber(String phoneNumber) {
         StringBuilder number = new StringBuilder();
 
-        for (char c : phone_number.strip().toCharArray()) {
+        for (char c : phoneNumber.strip().toCharArray()) {
             if (Character.isDigit(c)) {
                 number.append(c);
             }
@@ -46,20 +53,20 @@ public class Person {
     }
 
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = processNumber(phoneNumber);
     }
 
     @Override
     public String toString() {
         if (getName().isEmpty()) {
-            return "unknown name (" + getPhone_number() + ")";
+            return "unknown name (" + getPhoneNumber() + ")";
         }
 
-        return getName() + " (" + getPhone_number() + ")";
+        return getName() + " (" + getPhoneNumber() + ")";
     }
 }

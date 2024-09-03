@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Book {
     public final String title;
     public final String author;
-    private ArrayList<Person> previousOwners;
+    final private ArrayList<Person> previousOwners = new ArrayList<>();
     private Person currentOwner;
     public final Integer id;
 
@@ -14,7 +14,6 @@ public class Book {
         this.author = author;
         this.id = id;
         this.currentOwner = null;
-        previousOwners = new ArrayList<>();
     }
 
     public Book(String title, String author, Integer id, Person current_owner) {
@@ -22,7 +21,6 @@ public class Book {
         this.author = author;
         this.id = id;
         this.currentOwner = current_owner;
-        previousOwners = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -50,20 +48,22 @@ public class Book {
         this.currentOwner = null;
     }
 
-    public ArrayList<Person> getPreviousOwners() {
-        return previousOwners;
-    }
+// --Commented out by Inspection START (9/3/2024 5:58 PM):
+//    public ArrayList<Person> getPreviousOwners() {
+//        return previousOwners;
+//    }
+// --Commented out by Inspection STOP (9/3/2024 5:58 PM)
 
     @Override
     public String toString(){
         if (getCurrentOwner() == null) {
-            return "Book: " + getId() +
+            return "Book ID: " + getId() +
                     "\nTitle: " + getTitle() +
                     "\nAuthor: " + getAuthor() +
                     "\nStatus: Available\n";
         }
 
-        return "Book: " + getId() +
+        return "Book ID: " + getId() +
                 "\nTitle: " + getTitle() +
                 "\nAuthor: " + getAuthor() +
                 "\nCurrent Owner: " + getCurrentOwner() + "\n";
