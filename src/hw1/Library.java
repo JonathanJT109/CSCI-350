@@ -33,7 +33,7 @@ public class Library {
         ArrayList<Person> found = new ArrayList<>();
 
         for (Person p : owners) {
-            if (p.getName().equals(name)) {
+            if (p.getName().equalsIgnoreCase(name)) {
                 found.add(p);
             }
         }
