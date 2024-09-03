@@ -1,3 +1,14 @@
+/*
+Name: Jonathan Gonzalez
+Class: CSCI 350
+Last update: 09/03/2024
+Description: Create a library with multiple classes.
+Classes:
+    - Book
+    - Magazine
+    - Person
+    - Library
+ */
 package hw1;
 
 import java.util.ArrayList;
