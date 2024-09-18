@@ -1,0 +1,4 @@
+(executable
+ (public_name exercise01)
+ (name exercise01)
+ (libraries final_project))
