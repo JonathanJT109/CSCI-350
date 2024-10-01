@@ -10,7 +10,7 @@
 3. dog!?
 
 ## Question 2
-No, it's not. There is only one path to achieve a specific answer.
+No, it's not. There is only one path to achieve specific answers.
 
 ## Question 3
 The largest string is infinite due to the infinite loop in `<verb> <adverb>` which goes to `<verb>` again.
