@@ -11,9 +11,6 @@ package hw3;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class hw3dfa {
-
-    // You'll need to put your extra functions up here!
-
     // fn1
     public static Boolean fn1_start(String in) {
         if (in.isEmpty()) return true;
@@ -73,7 +70,8 @@ public class hw3dfa {
         return fn2_start(in);
     }
 
-    // fn3. Used ChatGPT to see the equivalent to char in str
+    // fn3. Used ChatGPT to see the equivalent to char in str. I used n to avoid the progress of creating
+    //  multiple states but the process is the same.
     public static Boolean fn3_start(String in, int n) {
         if (in.isEmpty() && n == 0) return true;
         if (!in.isEmpty() && "abc".contains(String.valueOf(in.charAt(0)))) {
@@ -87,16 +85,30 @@ public class hw3dfa {
     }
 
     // fn4
-    public static Boolean fn4_start(String in, int n) {
-        if (in.isEmpty() && n % 2 == 0) return true;
-        if (!in.isEmpty() && "abcd".contains(String.valueOf(in.charAt(0)))) {
-            return fn4_start(in.substring(1), n + 1);
+    public static Boolean fn4_start(String in) {
+        if (in.isEmpty()) return true;
+        if ("abcd".contains(String.valueOf(in.charAt(0)))) {
+            return fn4_s1(in.substring(1));
         }
         return false;
     }
 
+    public static Boolean fn4_s1(String in) {
+        if (in.isEmpty()) return false;
+        if ("abcd".contains(String.valueOf(in.charAt(0)))) {
+            return fn4_end(in.substring(1));
+        }
+        return false;
+    }
+
+    public static Boolean fn4_end(String in) {
+        if (in.isEmpty()) return true;
+
+        return fn4_start(in);
+    }
+
     public static Boolean fn4(String in) {
-        return fn4_start(in, 0);
+        return fn4_start(in);
     }
 
     // fn5
@@ -223,5 +235,4 @@ public class hw3dfa {
             }
         }
     }
-
 }
