@@ -1,10 +1,10 @@
-/* hw4dfa.java
- * <name>
- * <date>
- *
- * <description>
- *
+/*
+ * Name: Jonathan Gonzalez
+ * Class: CSCI 350
+ * Last update: 30/09/2024
+ * Description: DFAs Homework
  */
+
 
 package hw3;
 

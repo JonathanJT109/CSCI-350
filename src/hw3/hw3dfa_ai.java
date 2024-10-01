@@ -1,3 +1,10 @@
+/*
+ * Name: Jonathan Gonzalez
+ * Class: CSCI 350
+ * Last update: 30/09/2024
+ * Description: DFAs Homework solved by AI
+ */
+
 package hw3;
 
 public class hw3dfa_ai {
