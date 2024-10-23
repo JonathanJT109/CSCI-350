@@ -97,7 +97,7 @@ public class ParserTest {
         System.setOut(originalOut);
         int length1 = out.toByteArray().length;
 
-        p.parse("a = (1-3*4)");
+        p.parse("a = (1 - 3 * 4)");
 
         System.setOut(new PrintStream(out));
         p.print();

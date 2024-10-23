@@ -128,11 +128,11 @@ public class Parser {
          */
         System.out.println("Expr: '" + input + "'");
         if (input.isEmpty()) return null;
+        if ("+-/*=".contains(String.valueOf(input.charAt(input.length() - 1)))) return null;
 
-        // TODO: Make a new function for the left side node.
         int equal_loc = input.indexOf("=");
         while (equal_loc != -1 && equal_loc != 0 && equal_loc != input.length() - 1) {
-            Node left = expr(input.substring(0, equal_loc).strip());
+            Node left = factorIdent(input.substring(0, equal_loc).strip());
             Node right = expr(input.substring(equal_loc + 1).strip());
             if (left == null || isInteger(left.eval())) {
                 throw new Exception("Invalid string.");
@@ -163,14 +163,14 @@ public class Parser {
             plus_loc = input.indexOf("+", plus_loc + 1);
         }
 
-        int mult_loc = input.indexOf("*");
-        while (mult_loc != -1 && mult_loc != 0 && mult_loc != input.length() - 1) {
-            Node left = expr(input.substring(0, mult_loc).strip());
-            Node right = expr(input.substring(mult_loc + 1).strip());
+        int multi_loc = input.indexOf("*");
+        while (multi_loc != -1 && multi_loc != 0 && multi_loc != input.length() - 1) {
+            Node left = expr(input.substring(0, multi_loc).strip());
+            Node right = expr(input.substring(multi_loc + 1).strip());
             if (left != null && right != null) {
                 return new Op('*', left, right);
             }
-            mult_loc = input.indexOf("*", mult_loc + 1);
+            multi_loc = input.indexOf("*", multi_loc + 1);
         }
 
         int div_loc = input.indexOf("/");
@@ -186,6 +186,17 @@ public class Parser {
         return factor(input);
     }
 
+    public Node factorIdent(String input) throws Exception {
+        if (input.isEmpty()) return null;
+        boolean match = input.matches("^\\d+[a-zA-Z]+$");
+
+        if (input.contains(" ") || match) {
+            throw new Exception("Invalid string.");
+        }
+
+        return new Leaf(input);
+    }
+
     public Node factor(String input) throws Exception {
         System.out.println("Factor: '" + input + "'");
         if (input.isEmpty()) return null;
@@ -193,12 +204,6 @@ public class Parser {
 
         if (chars[0] == '(' && chars[input.length() - 1] == ')') {
             return expr(input.substring(1, input.length() - 1).strip());
-        }
-
-        boolean match = input.matches("^\\d+[a-zA-Z]+$");
-
-        if (input.contains(" ") || match) {
-            throw new Exception("Invalid string.");
         }
 
         for (char c : chars) {
@@ -224,7 +229,7 @@ public class Parser {
     }
 
     public static void main(String[] args) {
-        String[] tests = {"a = (4-3*3)", "(4-3*3)"};
+        String[] tests = {"a = (4-3*3)", "5 +"};
         Parser p = new Parser();
         for (String t : tests) {
             System.out.println("\nTrying " + t);
